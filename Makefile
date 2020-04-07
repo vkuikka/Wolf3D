@@ -21,19 +21,18 @@ INCLUDE = libft/includes
 LIBFT = libft/libft.a ~/Documents/github/minilibx/libmlx_Linux.a
 FDF = -I ~/Documents/github/minilibx -lXext -lX11 -lm
 
-
 all: $(NAME)
 
 $(NAME):
-	@make -C libft
 	gcc -o $(NAME) -Wall -Wextra -Werror $(FILES) $(LIBFT) -I $(INCLUDE) $(FDF)
+	#@make -C libft
 
 clean:
-	@make clean -C libft
+	#@make clean -C libft
 
 fclean: clean
 	rm -f $(NAME)
-	@make fclean -C libft
+	#@make fclean -C libft
 
 re: fclean
 	make all

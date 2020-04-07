@@ -9,6 +9,10 @@
 # define B_VAL(x) ((x) - ((x) / 256) * 256)
 
 # define ESC 65307
+# define UINT_MAX 4294967295
+# define RES_X 1800
+# define RES_Y 1100
+# define PI 3.14159265358979323846
 # include "mlx.h"
 # include "libft.h"
 # include "get_next_line.h"
@@ -25,9 +29,11 @@ typedef struct	s_mlx
 typedef struct	s_wolf
 {
 	int			**map;
-	float		pos_x;
-	float		pos_y;
-	float		player_dir;
+	unsigned	pos_x;
+	unsigned	pos_y;
+	double		sub_pos_x;
+	double		sub_pos_y;
+	double		dir;
 }				t_wolf;
 
 #endif
