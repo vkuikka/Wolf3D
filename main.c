@@ -40,11 +40,11 @@ void	ft_draw_line(int x, int len, t_mlx mlx, unsigned c)
 void	ft_draw_screen(t_wolf player, t_mlx mlx, int key)
 {
 	int		map[5][5] = {
-		{2,2,2,2,2},
-		{1,0,0,0,1},
-		{1,0,0,0,1},
-		{1,0,0,0,1},
-		{2,2,2,2,2}
+		{1,1,1,1,1},
+		{5,0,0,0,3},
+		{5,0,4,0,3},
+		{5,0,0,0,3},
+		{1,1,1,1,1}
 	};
 	double	vx = 1;
 	double	vy = 1;
@@ -59,165 +59,152 @@ void	ft_draw_screen(t_wolf player, t_mlx mlx, int key)
 	double	line_len = 0;
 	double	dist = 0;
 
-	double	xIntercept = 0;
-	double	yIntercept = 0;
+	// double	xIntercept = 0;
+	// double	yIntercept = 0;
 
 	double x = 0;
 
 	int color = 0xffffff;
 
+// 	while (x++ < 1800)
+// 	{
+// 		diff_x = (1 - player.sub_pos_x) * tan(player.dir * PI / 180);
+// 		diff_y = player.sub_pos_y / tan(player.dir * PI / 180);
+
+// 		step_x = tan(player.dir * PI / 180);
+// 		step_y = 1 / tan(player.dir * PI / 180);
+
+// 		xIntercept = player.pos_x + player.sub_pos_x + -player.sub_pos_y / tan(player.dir * PI / 180);
+// 		yIntercept = player.pos_y + player.sub_pos_y + player.sub_pos_x / tan(player.dir * PI / 180);
+
+// 		vx = (double)player.pos_x + player.sub_pos_x;
+// 		vy = (double)player.pos_y + player.sub_pos_y;
+// 		if (x == 1800 / 2)
+// 			printf("\nvx: %f\nvy: %f", vx, vy);
+
+// 		int nohit = 1;
+// 		while (nohit)
+// 		{
+// 			while (yIntercept < vy)
+// 			{
+// 				ft_putstr("--1--");
+// 				if (map[player.pos_x][(int)yIntercept])
+// 				{
+// 					nohit = 0;
+// 					break;
+// 				}
+// 				vx += 1.0;
+// 				yIntercept += step_y;
+// 			}
+// 			while (xIntercept < vx && nohit)
+// 			{
+// 				ft_putstr("--2--");
+// 				if (map[(int)xIntercept][player.pos_y])
+// 				{
+// 					nohit = 0;
+// 					break;
+// 				}
+// 				vy -= 1.0;
+// 				xIntercept += step_x;
+// 			}
+// 			if (!(int)vx || !(int)vy)
+// 			{
+// 				nohit = 0;
+// 			}
+// 		}
+// 		vx -= player.pos_x;
+// 		vy -= player.pos_y;
+// 		dist = vx * cos(player.dir * PI / 180) + vy * sin(player.dir * PI / 180);
+// 		if (x == 1800 / 2)
+// 		{
+// 			printf("\nxinter: %f\nyinter: %f", xIntercept, yIntercept);
+// 			printf("\nposx: %d\nposy: %d\ndir: %f\nstepx: %f\nstepy: %f\n", player.pos_x, player.pos_y, player.dir, step_x, step_y);
+// 			printf("diff_x: %f\ndiff_y: %f\ndist: %f\n", diff_x, diff_y, dist);
+// 		}
+// 		line_len = 1100 / dist;
+// 		ft_draw_line(x, line_len, mlx, color);
+// 		player.dir += (double)45 / 1800;
+// 	}
+// 	ft_putstr("return");
+// }
+
+
 	while (x++ < 1800)
 	{
-		diff_x = (1 - player.sub_pos_x) * tan(player.dir * PI / 180);
+		diff_x = -(1 - player.sub_pos_x) * tan(player.dir * PI / 180);
 		diff_y = player.sub_pos_y / tan(player.dir * PI / 180);
 
-		step_x = tan(player.dir * PI / 180);
+		step_x = -tan(player.dir * PI / 180);
 		step_y = 1 / tan(player.dir * PI / 180);
 
-		xIntercept = player.pos_x + player.sub_pos_x + -player.sub_pos_y / tan(player.dir * PI / 180);
-		yIntercept = player.pos_y + player.sub_pos_y + player.sub_pos_x / tan(player.dir * PI / 180);
+		vx = (double)player.pos_x + player.sub_pos_x - 1;
+		vy = (double)player.pos_y + player.sub_pos_y - 1;
 
-		vx = (double)player.pos_x + player.sub_pos_x;
-		vy = (double)player.pos_y + player.sub_pos_y;
-		if (x == 1800 / 2)
-			printf("\nvx: %f\nvy: %f", vx, vy);
+		if (step_x < 0)
+			step_x *= -1;
+		if (step_y < 0)
+			step_y *= -1;
 
 		int nohit = 1;
+		double delta_x = 0;
+		double delta_y = 0; //intersect minus player
 		while (nohit)
 		{
-			while (yIntercept < vy)
+			if (step_x > step_y)
 			{
-				if (map[player.pos_x][(int)yIntercept])
-				{
-					nohit = 0;
-					break;
-				}
-				vx += 1.0;
-				yIntercept += step_y;
+				vx += step_x * step_y;
+				vy += step_y;
 			}
-			while (xIntercept < vx && nohit)
+			else
 			{
-				if (map[(int)xIntercept][player.pos_y])
-				{
-					nohit = 0;
-					break;
-				}
-				vy -= 1.0;
-				xIntercept += step_x;
+				vx += step_x;
+				vy += step_y * step_x;
+			}
+			if (vx > 5 || vy > 5)
+			{
+				color = 0x0000ff;
+				nohit = 0;
+			}
+			else if (map[(int)vy][(int)vx] == 1)
+			{
+				color = 0x00ff00;
+				nohit = 0;
+			}
+			else if (map[(int)vy][(int)vx] == 2)
+			{
+				color = 0xff0000;
+				nohit = 0;
+			}
+			else if (map[(int)vy][(int)vx] == 3)
+			{
+				color = 0xffff00;
+				nohit = 0;
+			}
+			else if (map[(int)vy][(int)vx] == 4)
+			{
+				color = 0xff00ff;
+				nohit = 0;
+			}
+			else if (map[(int)vy][(int)vx] == 5)
+			{
+				color = 0x0fffff;
+				nohit = 0;
 			}
 		}
-		vx -= player.pos_x;
-		vy -= player.pos_y;
-		dist = vx * cos(player.dir * PI / 180) + vy * sin(player.dir * PI / 180);
-		if (x == 1800 / 2)
+		// diff_x += vx * step_x;
+		// diff_y += vy * step_y;
+
+		dist = diff_x * cos(player.dir * PI / 180) + diff_y * sin(player.dir * PI / 180);
+		if (x == RES_X / 2)
 		{
-			printf("\nxinter: %f\nyinter: %f", xIntercept, yIntercept);
-			printf("\nposx: %d\nposy: %d\ndir: %f\nstepx: %f\nstepy: %f\n", player.pos_x, player.pos_y, player.dir, step_x, step_y);
+			printf("\nposx: %f\nposy: %f\ndir: %f\nstepx: %f\nstepy: %f\n", (double)player.pos_x + player.sub_pos_x, (double)player.pos_y + player.sub_pos_y, player.dir, step_x, step_y);
 			printf("diff_x: %f\ndiff_y: %f\ndist: %f\n", diff_x, diff_y, dist);
 		}
 		line_len = 1100 / dist;
 		ft_draw_line(x, line_len, mlx, color);
-		player.dir += (double)45 / 1800;
+		player.dir -= (double)30 / 1800;
 	}
 }
-
-
-	// while (x++ < 1800)
-	// {
-	// 	diff_x = -(1 - player.sub_pos_x) * tan(player.dir * PI / 180);
-	// 	diff_y = player.sub_pos_y / tan(player.dir * PI / 180);
-
-	// 	step_x = -tan(player.dir * PI / 180);
-	// 	step_y = 1 / tan(player.dir * PI / 180);
-
-	// 	vx = (double)player.pos_x + player.sub_pos_x - 1;
-	// 	vy = (double)player.pos_y + player.sub_pos_y - 1;
-
-	// 	if (step_x < 0)
-	// 		step_x *= -1;
-	// 	if (step_y < 0)
-	// 		step_y *= -1;
-	// 	nohit = 1;
-	// 	while (nohit)
-	// 	{
-	// 		if (step_x > step_y)
-	// 		{
-	// 			vx += step_x * step_y;
-	// 			vy += step_y;
-	// 		}
-	// 		else
-	// 		{
-	// 			vx += step_x;
-	// 			vy += step_y * step_x;
-	// 		}
-	// 		if (vx > 5 || vy > 5)
-	// 		{
-	// 			color = 0x0000ff;
-	// 			nohit = 0;
-	// 		}
-	// 		else if (map[(int)vy][(int)vx] == 2)
-	// 		{
-	// 			color = 0xff0000;
-	// 			nohit = 0;
-	// 		}
-	// 		else if (map[(int)vy][(int)vx] == 1)
-	// 		{
-	// 			color = 0x00ff00;
-	// 			nohit = 0;
-	// 		}
-	// 		else if (map[(int)vy][(int)vx] == 3)
-	// 		{
-	// 			color = 0xffff00;
-	// 			nohit = 0;
-	// 		}
-	// 	}
-	// 	diff_x += vx * step_x;
-	// 	diff_y += vy * step_y;
-
-	// 	dist = diff_x * cos(player.dir * PI / 180) + diff_y * sin(player.dir * PI / 180);
-	// 	if (x == 1800 / 2)
-	// 	{
-	// 		printf("\nposx: %d\nposy: %d\ndir: %f\nstepx: %f\nstepy: %f\n", player.pos_x, player.pos_y, player.dir, step_x, step_y);
-	// 		printf("diff_x: %f\ndiff_y: %f\ndist: %f\n", diff_x, diff_y, dist);
-	// 	}
-	// 	line_len = 1100 / dist;
-	// 	ft_draw_line(x, line_len, mlx, color);
-	// 	player.dir -= (double)20 / 1800;
-	// }
-// }
-
-// int		ft_cast(int angle, int x,  t_wolf player)
-// {
-// 	double	cam;
-// 	double	ray_x;
-// 	double	ray_y;
-// 	double	ray_dirx;
-// 	double	ray_diry;
-// 	double	mapx;
-// 	double	mapy;
-
-// 	cam  = 2 * x / (double)RES_X - 1;
-// 	ray_x = player.pos_x;
-// }
-
-// void	ft_render(t_wolf player, t_mlx mlx, int key)
-// {
-// 	int		x;
-// 	int		column;
-// 	double	ray_angle;
-
-// 	x = 0;
-// 	while (x < RES_X)
-// 	{
-// 		if (x < RES_X / 2)
-// 			ray_angle = player.dir - (RES_X / 20 * x);
-// 		else
-// 			ray_angle = player.dir + (RES_X / 20 * x);
-// 		column = ft_cast(ray_angle, x, player);
-// 		ft_draw_line(x, column, mlx, 0xffffff - column);
-// 		x++;
-// 	}
-// }
 
 int		ft_deal_key(int key, t_mlx *mlx)
 {
@@ -233,9 +220,9 @@ int		ft_deal_key(int key, t_mlx *mlx)
 			ft_stop(0);
 		player->pos_x = 1;
 		player->pos_y = 1;
-		player->sub_pos_x = 0.5;
-		player->sub_pos_y = 0.5;
-		player->dir = 20;
+		player->sub_pos_x = 0.0;
+		player->sub_pos_y = 0.0;
+		player->dir = 90;
 	}
 	if (key == 97)
 		player->dir++;
@@ -245,17 +232,42 @@ int		ft_deal_key(int key, t_mlx *mlx)
 		player->dir = 360 + player->dir;
 
 	if (key == 65361)
-		player->pos_x--;
+		player->sub_pos_x -= 0.1;
 	if (key == 65363)
-		player->pos_x++;
+		player->sub_pos_x += 0.1;
 	if (key == 65362)
-		player->pos_y--;
+		player->sub_pos_y -= 0.1;
 	if (key == 65364)
+		player->sub_pos_y += 0.1;
+
+	if (player->sub_pos_y > 1.0f)
+	{
 		player->pos_y++;
+		player->sub_pos_y -= 1.0f;
+	}
+	if (player->sub_pos_x > 1.0f)
+	{
+		player->pos_x++;
+		player->sub_pos_x -= 1.0f;
+	}
+	if (player->sub_pos_y < 0.0f)
+	{
+		player->pos_y--;
+		player->sub_pos_y += 1.0f;
+	}
+	if (player->sub_pos_x < 0.0f)
+	{
+		player->pos_x--;
+		player->sub_pos_x += 1.0f;
+	}
 	// if (player.map = ft_read_map(mlx->map_path))
 	// 	ft_stop(3);
 	mlx_clear_window(mlx->mlx_ptr, mlx->win_ptr);
 	ft_draw_screen(*player, *mlx, key);
+	for (int x = 0; x < RES_X; x++)
+		mlx_pixel_put(mlx->mlx_ptr, mlx->win_ptr, x, RES_Y / 2, 0xffffff);
+	for (int y = 0; y < RES_X; y++)
+		mlx_pixel_put(mlx->mlx_ptr, mlx->win_ptr, RES_X / 2, y, 0xffffff);
 	return (0);
 }
 
