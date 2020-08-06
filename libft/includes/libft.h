@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 14:44:12 by vkuikka           #+#    #+#             */
-/*   Updated: 2019/12/18 21:02:12 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/05 19:27:44 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,15 @@ typedef struct		s_list
 	struct s_list	*next;
 }					t_list;
 
+int					*ft_arrdup(const int *src, const int len);
+void				ft_quicksort(int *nums, int index, int len);
 int					ft_atoi_base(const char *nb, int base);
-char				*ft_itoa_base(int num, int base);
+int					ft_atoi(const char *str);
+char				*ft_itoa_base(long num, int base, int lowercase);
 int					*ft_strsplit_int(char *s, char c);
 int					ft_abs(int num);
 void				ft_swap(int *value1, int *value2);
+int					**ft_permutations(int a[], int size, int n);
 int					**ft_new_int_arr(unsigned str_len, unsigned arr_len);
 char				**ft_new_char_arr(unsigned str_len, unsigned arr_len);
 int					ft_factorial(int num);
@@ -51,7 +55,6 @@ char				*ft_strncpy(char *dst, const char *src, size_t len);
 void				*ft_memmove(void *dst, const void *src, size_t len);
 void				*ft_memchr(const void *s, int c, size_t n);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
-int					ft_atoi(const char *str);
 size_t				ft_strlen(const char *str);
 void				*ft_memset(void *b, int c, size_t len);
 void				*ft_memcpy(void *dst,

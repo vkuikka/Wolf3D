@@ -22,14 +22,14 @@ static size_t	digit_count(long nb, int base)
 	return (i);
 }
 
-char			*ft_itoa_base(int num, int base)
+char			*ft_itoa_base(long num, int base, int lowercase)
 {
 	int		i;
 	int		count;
 	char	*b;
 	char	*res;
 
-	b = "0123456789ABCDEF";
+	b = lowercase ? "0123456789abcdef" : "0123456789ABCDEF";
 	count = digit_count(num, base);
 	i = num < 0 ? 0 : 1;
 	if (!(res = (char *)malloc(sizeof(char) * count + i)))
