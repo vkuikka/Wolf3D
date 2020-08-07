@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/07 20:20:39 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/07 21:31:23 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,32 @@
 
 # define RAY_PREC 400
 
-// # define ESC 65307
+#define APL_SDL2
+#ifdef APL_SDL2
+# define ESC 41
+# define W_KEY 26
+# define A_KEY 4
+# define S_KEY 22
+# define D_KEY 7
+# define Q_KEY 20
+# define E_KEY 8
+# define ARROW_U 82
+# define ARROW_L 80
+# define ARROW_D 81
+# define ARROW_R 79
+# define NUM1 30
+# define NUM2 31
+# define NUM3 32
+# define NUM4 33
+# define NUM5 34
+# define NUM6 35
+# define NUM7 36
+# define NUM8 37
+# define NUM9 38
+# define NUM0 39
+#endif
+
+#ifdef APL_MLX
 # define ESC 53
 # define W_KEY 13
 # define A_KEY 0
@@ -57,10 +82,15 @@
 # define NUM8 28
 # define NUM9 25
 # define NUM0 29
-# include "mlx.h"
+#endif
+
+#ifdef LNX_MLX
+# define ESC 65307
+#endif
+
 # include "libft.h"
 # include "get_next_line.h"
-// # include "Frameworks/SDL2.framework/Headers/SDL.h"
+# include "Output/SDL2.framework/Headers/SDL.h"
 # include <fcntl.h>
 # include <math.h>
 
@@ -76,15 +106,11 @@ typedef struct		s_player
 
 typedef struct		s_window
 {
-	void			*mlx_ptr;
-	void			*win_ptr;
-	void			*image;
-	int				bits_per_pixel;
-	int				size_of_line;
-	int				endian;
-	char			*pixel_col;
 	struct s_player	player;
 	int				**map;
+
+	SDL_Renderer	*SDLrenderer;
+	SDL_Window		*SDLwindow;
 }					t_window;
 
 typedef struct		s_ray
@@ -103,7 +129,7 @@ void		ft_wolf(t_player player, t_window *window);
 void		ft_wolf_line(int x, int len, t_window *window, unsigned c);
 
 int			ft_loop(t_window *window);
-int			ft_buttons(int button, void *nothing);
+int			ft_buttons(int button, int pressed);
 
 void		ft_error(char *message);
 

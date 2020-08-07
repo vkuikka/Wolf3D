@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/07 20:20:32 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/07 21:29:42 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,38 +114,39 @@ void	ft_wolf(t_player player, t_window *window)
 
 int		main(int argc, char **argv)
 {
+	SDL_Event	event;
 	t_window	*window;
-
-
-	// if (SDL_Init(SDL_INIT_EVERYTHING))
-	// {
-	// 	printf("%s\n", SDL_GetError());
-	// 	ft_error("could not initialize SDL\n");
-	// }
-	// SDL_Window* wind = SDL_CreateWindow("WOLF", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RES_X, RES_Y, 0);
-	// while (1);
-	// exit(1);
-	// wind = NULL;
-
+	int			quit;
 
 	if (!(window = (t_window *)malloc(sizeof(t_window))))
 		ft_error("memory allocation failed\n");
+	if (SDL_Init(SDL_INIT_EVERYTHING))
+	{
+		printf("%s\n", SDL_GetError());
+		ft_error("could not initialize SDL\n");
+	}
+	window->SDLwindow = SDL_CreateWindow("WOLF", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RES_X, RES_Y, 0);
+	window->SDLrenderer	= SDL_CreateRenderer(window->SDLwindow, -1, 0);
 	window->player.pos_x = 1.5;
 	window->player.pos_y = 1.5;
 	window->player.angle = 0.0;
 	window->player.fov = 45.0;
 	window->player.move_speed = 0.1;
 	window->player.rot_speed = 1.7;
-	window->pixel_col = NULL;
 	window->map = ft_read_map(argc, argv);
-	if (!(window->mlx_ptr = mlx_init()))
-		ft_error("failed to initialize minilibx\n");
-	if (!(window->win_ptr = mlx_new_window(window->mlx_ptr, RES_X, RES_Y, "WOLF")))
-		ft_error("failed to open new window\n");
-	mlx_do_key_autorepeatoff(window->mlx_ptr);
-	mlx_hook(window->win_ptr, 2, 1, ft_buttons, NULL);
-	mlx_hook(window->win_ptr, 3, 1, ft_buttons, NULL);
-	mlx_loop_hook(window->mlx_ptr, ft_loop, window);
-	mlx_loop(window->mlx_ptr);
+	quit = 0;
+	while (!quit)
+		while (SDL_PollEvent(&event))
+			if (event.type == SDL_QUIT || event.key.keysym.scancode == ESC)
+				quit = 1;
+			else if (event.key.repeat == 0)
+			{
+				if (event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN)
+					printf("%d\n", event.key.keysym.scancode);
+				else if (event.type == SDL_KEYUP || event.type == SDL_MOUSEBUTTONUP)
+					printf("");
+					// ft_buttons(event.key.keysym.scancode, 1);
+					// ft_buttons(event.key.keysym.scancode, 0);
+			}
 	return (0);
 }
