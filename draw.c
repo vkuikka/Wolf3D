@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/06 17:52:58 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/06 21:34:06 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/07 18:26:09 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void		ft_clear(t_window *window)
 		}
 		y++;
 	}
-	// mlx_clear_window(window->mlx_ptr, window->win_ptr);
 }
 
 void		ft_wolf_line(int x, int len, t_window *window, unsigned c)
@@ -70,10 +69,7 @@ void		ft_wolf_line(int x, int len, t_window *window, unsigned c)
 	int		limit;
 
 	if (len > RES_Y)
-	{
 		len = RES_Y;
-		c = 0xff0000;
-	}
 	y = RES_Y / 2 - len / 2;
 	limit = RES_Y / 2 + len / 2;
 	while (y < limit)
