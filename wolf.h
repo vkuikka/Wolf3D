@@ -6,34 +6,25 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/07 21:31:23 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/08 16:12:02 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WOLF_H
 # define WOLF_H
 
-# define R_HEX(x) ((x) * 65536)
-# define G_HEX(x) ((x) * 256)
-# define B_HEX(x) (x)
-# define R_VAL(x) ((x) / 65536)
-# define G_VAL(x) (((x) - ((x) / 65536) * 65536) / 256)
+# define R_VAL(x) ((x) / 256 / 256)
+# define G_VAL(x) (((x) - ((x) / (256 * 256)) * 256 * 256) / 256)
 # define B_VAL(x) ((x) - ((x) / 256) * 256)
 
-# define UINT_MAX 4294967295
 # define SAME_TIME_BUTTONS 3
-// # define RES_X 1800
-// # define RES_Y 1100
-# define RES_X 1000
-# define RES_Y 600
-# define PI M_1_PI
-// # define PI 3.14159265358979323846
+# define RAY_PREC 400
+# define RES_X 800
+# define RES_Y 500
 
-// rad = rad * 180 / PI
+# define PI M_PI
 # define RAD(x) ((x) * (PI / 180))
 # define DEG(x) ((x) * (180 / PI))
-
-# define RAY_PREC 400
 
 #define APL_SDL2
 #ifdef APL_SDL2
@@ -61,6 +52,9 @@
 #endif
 
 #ifdef APL_MLX
+# define R_HEX(x) ((x) * 65536)
+# define G_HEX(x) ((x) * 256)
+# define B_HEX(x) (x)
 # define ESC 53
 # define W_KEY 13
 # define A_KEY 0
@@ -88,11 +82,11 @@
 # define ESC 65307
 #endif
 
+# include <math.h>
+# include <fcntl.h>
 # include "libft.h"
 # include "get_next_line.h"
 # include "Output/SDL2.framework/Headers/SDL.h"
-# include <fcntl.h>
-# include <math.h>
 
 typedef struct		s_player
 {
@@ -117,6 +111,8 @@ typedef struct		s_ray
 {
 	double			x;
 	double			y;
+	double			prev_x;
+	double			prev_y;
 	double			sin;
 	double			cos;
 	double			angle;
