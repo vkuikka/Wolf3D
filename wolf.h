@@ -84,7 +84,6 @@
 
 # include <math.h>
 # include <fcntl.h>
-# include "libft.h"
 # include "get_next_line.h"
 # include "Output/SDL2.framework/Headers/SDL.h"
 
@@ -102,7 +101,6 @@ typedef struct		s_window
 {
 	struct s_player	player;
 	int				**map;
-
 	SDL_Renderer	*SDLrenderer;
 	SDL_Window		*SDLwindow;
 }					t_window;
@@ -123,13 +121,9 @@ typedef struct		s_ray
 
 void		ft_wolf(t_player player, t_window *window);
 void		ft_wolf_line(int x, int len, t_window *window, unsigned c);
-
 int			ft_loop(t_window *window);
 int			ft_buttons(int button, int pressed);
-
 void		ft_error(char *message);
-
-void		ft_pixel(int x, int y, int color, t_window *window);
 void		ft_draw_window(t_window *window);
 void		ft_clear(t_window *window);
 
