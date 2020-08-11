@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   buttons.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 13:36:13 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/08 16:18:16 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/11 15:00:30 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_move(int key, int dir, t_window *window ,t_player *player)
 		new_y = player->pos_y + sin(RAD(player->angle + (90 * dir)))
 				* (player->move_speed / 2);
 	}
-	else if (key == W_KEY || key == S_KEY)
+	else
 	{
 		new_x = player->pos_x + ((double)dir * cos(RAD(player->angle)))
 				* player->move_speed;
@@ -69,11 +69,12 @@ int		ft_buttons(int button, const int pressed)
 	int				i;
 
 	if (!(keys) && !(i = 0))
+	{
 		if (!(keys = (int *)malloc(sizeof(int) * SAME_TIME_BUTTONS)))
 			ft_error("memory allocation failed\n");
-		else
-			while (++i < SAME_TIME_BUTTONS)
-				keys[i] = -1;
+		while (++i < SAME_TIME_BUTTONS)
+			keys[i] = -1;
+	}
 	i = -1;
 	while (++i < SAME_TIME_BUTTONS)
 		if (pressed == -1 && (keys[i] == button || (button == -1 && keys[i] != -1)))
@@ -101,18 +102,17 @@ int		ft_loop(t_window *window)
 		ft_deal_key(S_KEY, window, &window->player);
 	if (ft_buttons(D_KEY, -1))
 		ft_deal_key(D_KEY, window, &window->player);
-	if (ft_buttons(NUM1, -1))
+	if (ft_buttons(NUM1, -1) && window->player.fov > -180)
 		window->player.fov--;
-	if (ft_buttons(NUM2, -1))
+	if (ft_buttons(NUM2, -1) && window->player.fov < 180)
 		window->player.fov++;
 	if (ft_buttons(Q_KEY, -1))
 		ft_deal_key(Q_KEY, window, &window->player);
 	if (ft_buttons(E_KEY, -1))
 		ft_deal_key(E_KEY, window, &window->player);
-	if (ft_buttons(ESC, -1))
-		ft_deal_key(ESC, window, &window->player);
-	ft_clear(window);
+	SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
+	SDL_RenderClear(window->SDLrenderer);
 	ft_wolf(window->player, window);
-	ft_draw_window(window);
+	SDL_RenderPresent(window->SDLrenderer);
 	return (0);
 }

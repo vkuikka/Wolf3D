@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/08 16:19:37 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/11 14:59:16 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	**ft_read_map(int argc, char **argv)
 	int		fd;
 	int		i;
 
-	if (argc != 2 || 1 > (fd = open(argv[1], O_RDONLY)) || (i = 0))
+	if (1 > (fd = open(argc == 2 ? argv[1] : NULL, O_RDONLY)) && !(i = 0))
 		ft_error("give one valid map file name as argument\n");
 	while (0 < (err = get_next_line(fd, &line)) && ++i)
 		free(line);
@@ -41,11 +41,13 @@ static int	**ft_read_map(int argc, char **argv)
 	return (map);
 }
 
-static int	ft_color(t_ray ray)
+void		ft_draw_line(int x, int len, t_window *window, t_ray ray)
 {
 	static int	prev_color = 0;
 	int			color;
-	
+	int			limit;
+	int			y;
+
 	color = 0;
 	if ((int)ray.prev_x != (int)ray.x && (int)ray.prev_y != (int)ray.y)
 		color = prev_color;
@@ -58,7 +60,14 @@ static int	ft_color(t_ray ray)
 	else if ((int)ray.prev_y < (int)ray.y)
 		color = 0x0000ff;
 	prev_color = color;
-	return (color);
+	SDL_SetRenderDrawColor(window->SDLrenderer,
+		R_VAL(color), G_VAL(color), B_VAL(color), 255);
+	if (len > RES_Y)
+		len = RES_Y;
+	y = RES_Y / 2 - len / 2;
+	limit = RES_Y / 2 + len / 2;
+	while (y < limit)
+		SDL_RenderDrawPoint(window->SDLrenderer, x, y++);
 }
 
 void		ft_wolf(t_player player, t_window *window)
@@ -85,7 +94,7 @@ void		ft_wolf(t_player player, t_window *window)
 		}
 		ray.dist = sqrt(pow(player.pos_x - ray.x, 2) +
 			pow(player.pos_y - ray.y, 2)) * cos(RAD(ray.angle - player.angle));
-		ft_wolf_line(window_x, (int)(RES_Y / ray.dist), window, ft_color(ray));
+		ft_draw_line(window_x, (int)(RES_Y / ray.dist), window, ray);
 		ray.angle += ray.increment;
 	}
 }

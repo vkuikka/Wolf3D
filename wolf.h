@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wolf.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/08 16:12:02 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/11 15:02:57 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@
 # include <math.h>
 # include <fcntl.h>
 # include "get_next_line.h"
-# include "Output/SDL2.framework/Headers/SDL.h"
+# include "SDL2.framework/Headers/SDL.h"
 
 typedef struct		s_player
 {
