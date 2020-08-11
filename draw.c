@@ -12,11 +12,6 @@
 
 #include "wolf.h"
 
-void		ft_pixel(int x, int y, int color, t_window *window)
-{
-	SDL_RenderDrawPoint(window->SDLrenderer, x, y);
-}
-
 void		ft_draw_window(t_window *window)
 {
 	SDL_RenderPresent(window->SDLrenderer);
@@ -42,7 +37,6 @@ void		ft_wolf_line(int x, int len, t_window *window, unsigned color)
 	while (y < limit)
 	{
 		SDL_RenderDrawPoint(window->SDLrenderer, x, y);
-		// ft_pixel(x, y, color, window);
 		y++;;
 	}
 }

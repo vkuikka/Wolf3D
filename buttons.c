@@ -68,17 +68,14 @@ int		ft_buttons(int button, const int pressed)
 	static int		*keys;
 	int				i;
 
-	if (!(keys))
-	{
+	if (!(keys) && !(i = 0))
 		if (!(keys = (int *)malloc(sizeof(int) * SAME_TIME_BUTTONS)))
 			ft_error("memory allocation failed\n");
-		i = -1;
-		while (++i < SAME_TIME_BUTTONS)
-			keys[i] = -1;
-	}
+		else
+			while (++i < SAME_TIME_BUTTONS)
+				keys[i] = -1;
 	i = -1;
 	while (++i < SAME_TIME_BUTTONS)
-	{
 		if (pressed == -1 && (keys[i] == button || (button == -1 && keys[i] != -1)))
 			return (1);
 		else if (pressed == 0 && keys[i] == button)
@@ -91,7 +88,6 @@ int		ft_buttons(int button, const int pressed)
 			keys[i] = button;
 			return (0);
 		}
-	}
 	return (0);
 }
 
