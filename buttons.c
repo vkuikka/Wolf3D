@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 13:36:13 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/11 15:00:30 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/11 15:29:15 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int		ft_buttons(int button, const int pressed)
 	static int		*keys;
 	int				i;
 
-	if (!(keys) && !(i = 0))
+	if (!(keys) && (i = -1))
 	{
 		if (!(keys = (int *)malloc(sizeof(int) * SAME_TIME_BUTTONS)))
 			ft_error("memory allocation failed\n");
