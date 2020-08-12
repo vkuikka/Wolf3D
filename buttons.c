@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 13:36:13 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/11 15:29:15 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/12 11:37:44 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int		ft_buttons(int button, const int pressed)
 	}
 	i = -1;
 	while (++i < SAME_TIME_BUTTONS)
-		if (pressed == -1 && (keys[i] == button || (button == -1 && keys[i] != -1)))
+		if (pressed == -1 && keys[i] == button)
 			return (1);
 		else if (pressed == 0 && keys[i] == button)
 		{
