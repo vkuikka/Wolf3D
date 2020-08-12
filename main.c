@@ -6,39 +6,41 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/11 14:59:16 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/11 16:01:42 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf.h"
 
-static int	**ft_read_map(int argc, char **argv)
+#include <stdio.h>
+
+static void	ft_read_map(int fd, t_window *window)
 {
+	size_t	len;
 	char	*line;
-	int		**map;
+	int		has_zero;
 	int		err;
-	int		fd;
 	int		i;
 
-	if (1 > (fd = open(argc == 2 ? argv[1] : NULL, O_RDONLY)) && !(i = 0))
-		ft_error("give one valid map file name as argument\n");
-	while (0 < (err = get_next_line(fd, &line)) && ++i)
-		free(line);
-	free(line);
-	if (!(map = (int **)malloc(sizeof(int *) * i)) || err < 0 ||
-			close(fd) || 1 > (fd = open(argv[1], O_RDONLY)) || (i = 0))
-		ft_error("failed to allocate memory and read file\n");
-	while (err < get_next_line(fd, &line))
-		if (line[ft_strlen(line) - 1] == '0' || line[0] == '0' ||
-			line[ft_strlen(line) - 1] == ' ' || line[0] == ' ')
+	i = 0;
+	while (0 < (err = get_next_line(fd, &line)))
+	{
+		if (len && len != ft_strlen(line))
+			ft_error("given file is not valid\n");
+		len = ft_strlen(line);
+		has_zero = ft_strstr(line, " 0 ") ? 1 : 0;
+		if (has_zero && i == 0)
+			ft_error("given file is not valid\n");
+		if (line[len - 1] == '0' || line[0] == '0' ||
+			line[len - 1] == ' ' || line[0] == ' ')
 			ft_error("given file is not valid\n");
 		else
-			!(map[i++] = ft_strsplit_int(line, ' ')) ?
+			!(window->map[i++] = ft_strsplit_int(line, ' ')) ?
 				ft_error("memory allocation failed\n") : free(line);
-	if (err < 0 || close(fd))
-		ft_error("failed to read given file\n");
-	free(line);
-	return (map);
+	}
+	if (has_zero)
+		ft_error("given file is not valid\n");
+	err < 0 || close(fd) ? ft_error("failed to read given file\n") : free(line);
 }
 
 void		ft_draw_line(int x, int len, t_window *window, t_ray ray)
@@ -101,12 +103,11 @@ void		ft_wolf(t_player player, t_window *window)
 
 static void	ft_init(t_window *window, int argc, char **argv)
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING))
-	{
-		ft_putstr(SDL_GetError());
-		ft_putchar('\n');
-		ft_error("could not initialize SDL\n");
-	}
+	int			err;
+	int			fd;
+	int			i;
+
+	i = 0;
 	if (!(window->SDLwindow = SDL_CreateWindow("WOLF", SDL_WINDOWPOS_CENTERED,
 						SDL_WINDOWPOS_CENTERED, RES_X, RES_Y, 0)))
 		ft_error("could not create window");
@@ -118,7 +119,15 @@ static void	ft_init(t_window *window, int argc, char **argv)
 	window->player.fov = 45.0;
 	window->player.move_speed = 0.1;
 	window->player.rot_speed = 2;
-	window->map = ft_read_map(argc, argv);
+	if (1 > (fd = open(argc == 2 ? argv[1] : NULL, O_RDONLY)))
+		ft_error("give one valid map file name as argument\n");
+	while (0 < (err = get_next_line(fd, &argv[0])) && ++i)
+		free(argv[0]);
+	free(argv[0]);
+	if (!(window->map = (int **)malloc(sizeof(int *) * i)) || err < 0 || close(fd) ||
+		1 > (fd = open(argv[1], O_RDONLY)))
+		ft_error("failed to allocate memory and read file\n");
+	ft_read_map(fd, window);
 }
 
 int		main(int argc, char **argv)
@@ -127,6 +136,8 @@ int		main(int argc, char **argv)
 	t_window	*window;
 	int			quit;
 
+	if (SDL_Init(SDL_INIT_EVERYTHING))
+		ft_error("could not initialize SDL\n");
 	if (!(window = (t_window *)malloc(sizeof(t_window))))
 		ft_error("memory allocation failed\n");
 	ft_init(window, argc, argv);
