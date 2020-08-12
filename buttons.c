@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   buttons.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 13:36:13 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/12 11:37:44 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/12 14:31:08 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_error(char *message)
 	exit(1);
 }
 
-void	ft_move(int key, int dir, t_window *window ,t_player *player)
+void	ft_move(int key, int dir, t_window *window, t_player *player)
 {
 	double			new_x;
 	double			new_y;
@@ -53,7 +53,6 @@ void	ft_deal_key(int key, t_window *window, t_player *player)
 	if (key == Q_KEY || key == E_KEY)
 	{
 		player->angle += dir * player->rot_speed;
-
 		if (player->angle < 0)
 			player->angle += 360;
 		else if (player->angle > 360)

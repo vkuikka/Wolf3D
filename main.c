@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/11 16:01:42 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/12 14:31:25 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static void	ft_init(t_window *window, int argc, char **argv)
 	if (!(window->SDLwindow = SDL_CreateWindow("WOLF", SDL_WINDOWPOS_CENTERED,
 						SDL_WINDOWPOS_CENTERED, RES_X, RES_Y, 0)))
 		ft_error("could not create window");
-	if (!(window->SDLrenderer	= SDL_CreateRenderer(window->SDLwindow, -1, 0)))
+	if (!(window->SDLrenderer = SDL_CreateRenderer(window->SDLwindow, -1, 0)))
 		ft_error("could not create renderer");
 	window->player.pos_x = 1.5;
 	window->player.pos_y = 1.5;
@@ -124,13 +124,13 @@ static void	ft_init(t_window *window, int argc, char **argv)
 	while (0 < (err = get_next_line(fd, &argv[0])) && ++i)
 		free(argv[0]);
 	free(argv[0]);
-	if (!(window->map = (int **)malloc(sizeof(int *) * i)) || err < 0 || close(fd) ||
-		1 > (fd = open(argv[1], O_RDONLY)))
+	if (!(window->map = (int **)malloc(sizeof(int *) * i)) || err < 0 ||
+			close(fd) || 1 > (fd = open(argv[1], O_RDONLY)))
 		ft_error("failed to allocate memory and read file\n");
 	ft_read_map(fd, window);
 }
 
-int		main(int argc, char **argv)
+int			main(int argc, char **argv)
 {
 	SDL_Event	event;
 	t_window	*window;
