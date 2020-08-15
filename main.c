@@ -30,9 +30,8 @@ static void	ft_read_map(int fd, t_window *window)
 			ft_error("given file is not valid\n");
 		len = ft_strlen(line);
 		has_zero = ft_strstr(line, " 0 ") ? 1 : 0;
-		if (has_zero && i == 0)
-			ft_error("given file is not valid\n");
-		if (line[len - 1] == '0' || line[0] == '0' ||
+		if ((has_zero && i == 0) ||
+			line[len - 1] == '0' || line[0] == '0' ||
 			line[len - 1] == ' ' || line[0] == ' ')
 			ft_error("given file is not valid\n");
 		else
@@ -44,42 +43,38 @@ static void	ft_read_map(int fd, t_window *window)
 	err < 0 || close(fd) ? ft_error("failed to read given file\n") : free(line);
 }
 
-
 void		ft_draw_line(int screen_x, int len, t_window *window, t_ray ray)
 {
 	SDL_Color	col;
 	static int	prev_color = 0;
-	int			color;
 	int			limit;
 	int			screen_y = 0;
 	double		imgx = 0;
 	double		imgy = 0;
 
-	color = 0;
-	double prev_x = ray.x - ray.cos;
-	double prev_y = ray.y - ray.sin;
-	if ((int)prev_x != (int)ray.x && (int)prev_y != (int)ray.y)
-		color = prev_color;
-	else if ((int)prev_x > (int)ray.x)
-		color = 0;
-	else if ((int)prev_y > (int)ray.y)
-		color = 1;
-	else if ((int)prev_x < (int)ray.x)
-		color = 2;
-	else if ((int)prev_y < (int)ray.y)
-		color = 3;
-	prev_color = color;
-	imgx = fmod(color == 0 || color == 2 ? ray.y : ray.x, 1) * window->textures[color]->w;
-	screen_y = RES_Y / 2 - (len > RES_Y ? RES_Y : len) / 2;
-	limit = RES_Y / 2 + len / 2;
+	col.a = 0;
+	if ((int)ray.prev_x != (int)ray.x && (int)ray.prev_y != (int)ray.y)
+		col.a = prev_color;
+	else if ((int)ray.prev_x > (int)ray.x)
+		col.a = 0;
+	else if ((int)ray.prev_y > (int)ray.y)
+		col.a = 1;
+	else if ((int)ray.prev_x < (int)ray.x)
+		col.a = 2;
+	else if ((int)ray.prev_y < (int)ray.y)
+		col.a = 3;
+	prev_color = col.a;
+	imgx = fmod(col.a == 0 || col.a == 2 ? ray.y : ray.x, 1) * window->textures[col.a]->w;
 	imgy = 0;
-	while (screen_y < (limit < RES_Y ? limit : RES_Y))
+	limit = RES_Y / 2 + len / 2;
+	screen_y = RES_Y / 2 - (len > RES_Y ? RES_Y : len) / 2;
+	while (screen_y < limit && screen_y < RES_Y)
 	{
 		imgy = ((double)screen_y - (RES_Y / 2 - len / 2)) /
 				((double)limit - (RES_Y / 2 - len / 2));
-		SDL_GetRGB(ft_get_pixel(window->textures[color], imgx,
-			imgy * window->textures[color]->h),
-			window->textures[color]->format, &col.r, &col.g, &col.b);
+		SDL_GetRGB(ft_get_pixel(window->textures[col.a], imgx,
+			imgy * window->textures[col.a]->h),
+			window->textures[col.a]->format, &col.r, &col.g, &col.b);
 		SDL_SetRenderDrawColor(window->SDLrenderer, col.r, col.g, col.b, 255);
 		SDL_RenderDrawPoint(window->SDLrenderer, screen_x, screen_y++);
 	}

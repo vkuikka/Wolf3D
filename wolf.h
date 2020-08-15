@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/15 20:34:07 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/15 21:07:29 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,13 @@ typedef struct		s_ray
 {
 	double			x;
 	double			y;
+	double			prev_x;
+	double			prev_y;
 	double			sin;
 	double			cos;
 	double			angle;
 	double			increment;
 	double			dist;
-	int				wall_code;
 }					t_ray;
 
 void		ft_wolf(t_player player, t_window *window);
@@ -132,7 +133,6 @@ void		ft_error(char *message);
 void		ft_draw_window(t_window *window);
 void		ft_clear(t_window *window);
 
-void		ft_error(char *message);
 Uint32		ft_get_pixel(SDL_Surface *surface, int x, int y);
 
 #endif

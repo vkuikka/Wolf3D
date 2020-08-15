@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 13:36:13 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/15 20:33:29 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/15 21:05:14 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,10 @@ void	ft_wolf(t_player player, t_window *window)
 		ray.cos = cos(RAD(ray.angle)) / RAY_PREC;
 		ray.x = player.pos_x + ray.cos;
 		ray.y = player.pos_y + ray.sin;
-		ray.wall_code = 0;
-		while (!(ray.wall_code = window->map[(int)(ray.y)][(int)(ray.x)]))
+		while (!(window->map[(int)(ray.y)][(int)(ray.x)]))
 		{
+			ray.prev_x = ray.x;
+			ray.prev_y = ray.y;
 			ray.x += ray.cos;
 			ray.y += ray.sin;
 		}
@@ -39,48 +40,54 @@ void	ft_wolf(t_player player, t_window *window)
 	}
 }
 
-void	ft_move(int key, int dir, t_window *window, t_player *player)
+Uint32	ft_get_pixel(SDL_Surface *surface, int x, int y)
+{
+	int		bpp;
+	Uint8	*p;
+
+	bpp = surface->format->BytesPerPixel;
+	p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+	if (bpp == 1)
+		return (*p);
+	else if (bpp == 2)
+		return (*(Uint16 *)p);
+	else if (bpp == 3)
+	{
+		if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+			return (p[0] << 16 | p[1] << 8 | p[2]);
+		else
+			return (p[0] | p[1] << 8 | p[2] << 16);
+	}
+	else if (bpp == 4)
+		return (*(Uint32 *)p);
+	return (0);
+}
+
+void	ft_deal_key(int key, t_window *window, t_player *p)
 {
 	double			new_x;
 	double			new_y;
-
-	if (key == A_KEY || key == D_KEY)
-	{
-		new_x = player->pos_x + cos(RAD(player->angle + (90 * dir)))
-				* (MOVE_SPEED / 2);
-		new_y = player->pos_y + sin(RAD(player->angle + (90 * dir)))
-				* (MOVE_SPEED / 2);
-	}
-	else
-	{
-		new_x = player->pos_x + ((double)dir * cos(RAD(player->angle)))
-				* MOVE_SPEED;
-		new_y = player->pos_y + ((double)dir * sin(RAD(player->angle)))
-				* MOVE_SPEED;
-	}
-	if (!window->map[(int)(new_y - 0.1)][(int)(new_x - 0.1)] &&
-		!window->map[(int)(new_y + 0.1)][(int)(new_x + 0.1)])
-	{
-		player->pos_x = new_x;
-		player->pos_y = new_y;
-	}
-}
-
-void	ft_deal_key(int key, t_window *window, t_player *player)
-{
 	int				dir;
 
 	dir = key == A_KEY || key == S_KEY || key == Q_KEY ? -1 : 1;
 	if (key == Q_KEY || key == E_KEY)
 	{
-		player->angle += dir * ROT_SPEED;
-		if (player->angle < 0)
-			player->angle += 360;
-		else if (player->angle > 360)
-			player->angle -= 360;
+		p->angle += dir * ROT_SPEED;
+		return ;
 	}
-	else
-		ft_move(key, dir, window, player);
+	new_x = p->pos_x + ((double)dir * cos(RAD(p->angle))) * MOVE_SPEED;
+	new_y = p->pos_y + ((double)dir * sin(RAD(p->angle))) * MOVE_SPEED;
+	if (key == A_KEY || key == D_KEY)
+	{
+		new_x = p->pos_x + cos(RAD(p->angle + (90 * dir))) * (MOVE_SPEED / 2);
+		new_y = p->pos_y + sin(RAD(p->angle + (90 * dir))) * (MOVE_SPEED / 2);
+	}
+	if (!window->map[(int)(new_y - 0.1)][(int)(new_x - 0.1)] &&
+		!window->map[(int)(new_y + 0.1)][(int)(new_x + 0.1)])
+	{
+		p->pos_x = new_x;
+		p->pos_y = new_y;
+	}
 }
 
 int		ft_buttons(int button, const int pressed)

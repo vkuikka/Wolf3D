@@ -1,16 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_pixel.c                                     :+:      :+:    :+:   */
+/*   ft_error.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/15 17:12:00 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/15 21:05:26 by vkuikka          ###   ########.fr       */
+/*   Created: 2020/08/15 21:05:33 by vkuikka           #+#    #+#             */
+/*   Updated: 2020/08/15 21:05:45 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "wolf.h"
+#include "libft.h"
 
-
-
+void	ft_error(char *message)
+{
+	ft_putstr("error: ");
+	ft_putstr(message);
+	exit(1);
+}
