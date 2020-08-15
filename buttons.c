@@ -6,13 +6,13 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 13:36:13 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/15 18:17:37 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/15 20:33:29 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf.h"
 
-void		ft_wolf(t_player player, t_window *window)
+void	ft_wolf(t_player player, t_window *window)
 {
 	t_ray	ray;
 	int		window_x;
@@ -114,11 +114,11 @@ int		ft_buttons(int button, const int pressed)
 
 int		ft_loop(t_window *window)
 {
-	if (ft_buttons(W_KEY, -1))
+	if (ft_buttons(W_KEY, -1) || ft_buttons(ARROW_U, -1))
 		ft_deal_key(W_KEY, window, &window->player);
 	if (ft_buttons(A_KEY, -1))
 		ft_deal_key(A_KEY, window, &window->player);
-	if (ft_buttons(S_KEY, -1))
+	if (ft_buttons(S_KEY, -1) || ft_buttons(ARROW_D, -1))
 		ft_deal_key(S_KEY, window, &window->player);
 	if (ft_buttons(D_KEY, -1))
 		ft_deal_key(D_KEY, window, &window->player);
@@ -126,9 +126,9 @@ int		ft_loop(t_window *window)
 		window->player.fov--;
 	if (ft_buttons(NUM2, -1) && window->player.fov < 180)
 		window->player.fov++;
-	if (ft_buttons(Q_KEY, -1))
+	if (ft_buttons(Q_KEY, -1) || ft_buttons(ARROW_L, -1))
 		ft_deal_key(Q_KEY, window, &window->player);
-	if (ft_buttons(E_KEY, -1))
+	if (ft_buttons(E_KEY, -1) || ft_buttons(ARROW_R, -1))
 		ft_deal_key(E_KEY, window, &window->player);
 	SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
 	SDL_RenderClear(window->SDLrenderer);

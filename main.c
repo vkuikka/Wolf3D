@@ -60,7 +60,7 @@ void		ft_draw_line(int screen_x, int len, t_window *window, t_ray ray)
 	double prev_y = ray.y - ray.sin;
 	if ((int)prev_x != (int)ray.x && (int)prev_y != (int)ray.y)
 		color = prev_color;
-	if ((int)prev_x > (int)ray.x)
+	else if ((int)prev_x > (int)ray.x)
 		color = 0;
 	else if ((int)prev_y > (int)ray.y)
 		color = 1;
@@ -100,7 +100,7 @@ static void	ft_init(t_window *window, int argc, char **argv)
 	window->player.pos_x = 1.5;
 	window->player.pos_y = 1.5;
 	window->player.angle = 0;
-	window->player.fov = 91.0;
+	window->player.fov = 61.0;
 	if (1 > (fd = open(argc == 2 ? argv[1] : NULL, O_RDONLY)))
 		ft_error("give one valid map file name as argument\n");
 	while (0 < (err = get_next_line(fd, &argv[0])) && ++i)

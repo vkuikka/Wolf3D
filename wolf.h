@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/15 19:37:31 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/15 20:34:07 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # define RES_Y 500
 # define TEXTURE_1 "textures/test.png"
 # define TEXTURE_2 "textures/gray2.png"
-# define TEXTURE_3 "textures/blue1.png"
+# define TEXTURE_3 "textures/sky.png"
 # define TEXTURE_4 "textures/blue2.png"
 
 
