@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wolf.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/11 15:02:57 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/15 19:37:31 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,16 @@
 # define B_VAL(x) ((x) - ((x) / 256) * 256)
 
 # define SAME_TIME_BUTTONS 3
-# define RAY_PREC 400
+# define MOVE_SPEED 0.1
+# define ROT_SPEED 2
+# define RAY_PREC 800
 # define RES_X 800
 # define RES_Y 500
+# define TEXTURE_1 "textures/test.png"
+# define TEXTURE_2 "textures/gray2.png"
+# define TEXTURE_3 "textures/blue1.png"
+# define TEXTURE_4 "textures/blue2.png"
+
 
 # define PI M_PI
 # define RAD(x) ((x) * (PI / 180))
@@ -85,7 +92,8 @@
 # include <math.h>
 # include <fcntl.h>
 # include "get_next_line.h"
-# include "SDL2.framework/Headers/SDL.h"
+# include "SDL.h"
+# include "SDL_image.h"
 
 typedef struct		s_player
 {
@@ -93,14 +101,13 @@ typedef struct		s_player
 	double			pos_y;
 	double			angle;
 	double			fov;
-	double			move_speed;
-	double			rot_speed;
 }					t_player;
 
 typedef struct		s_window
 {
-	struct s_player	player;
 	int				**map;
+	struct s_player	player;
+	SDL_Surface		**textures;
 	SDL_Renderer	*SDLrenderer;
 	SDL_Window		*SDLwindow;
 }					t_window;
@@ -109,8 +116,6 @@ typedef struct		s_ray
 {
 	double			x;
 	double			y;
-	double			prev_x;
-	double			prev_y;
 	double			sin;
 	double			cos;
 	double			angle;
@@ -120,11 +125,14 @@ typedef struct		s_ray
 }					t_ray;
 
 void		ft_wolf(t_player player, t_window *window);
-void		ft_wolf_line(int x, int len, t_window *window, unsigned c);
+void		ft_draw_line(int x, int len, t_window *window, t_ray ray);
 int			ft_loop(t_window *window);
 int			ft_buttons(int button, int pressed);
 void		ft_error(char *message);
 void		ft_draw_window(t_window *window);
 void		ft_clear(t_window *window);
+
+void		ft_error(char *message);
+Uint32		ft_get_pixel(SDL_Surface *surface, int x, int y);
 
 #endif

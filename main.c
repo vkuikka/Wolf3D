@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/12 14:31:25 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/12 18:27:31y vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static void	ft_read_map(int fd, t_window *window)
 	int		i;
 
 	i = 0;
+	len = 0;
 	while (0 < (err = get_next_line(fd, &line)))
 	{
 		if (len && len != ft_strlen(line))
@@ -43,61 +44,44 @@ static void	ft_read_map(int fd, t_window *window)
 	err < 0 || close(fd) ? ft_error("failed to read given file\n") : free(line);
 }
 
-void		ft_draw_line(int x, int len, t_window *window, t_ray ray)
+
+void		ft_draw_line(int screen_x, int len, t_window *window, t_ray ray)
 {
+	SDL_Color	col;
 	static int	prev_color = 0;
 	int			color;
 	int			limit;
-	int			y;
+	int			screen_y = 0;
+	double		imgx = 0;
+	double		imgy = 0;
 
 	color = 0;
-	if ((int)ray.prev_x != (int)ray.x && (int)ray.prev_y != (int)ray.y)
+	double prev_x = ray.x - ray.cos;
+	double prev_y = ray.y - ray.sin;
+	if ((int)prev_x != (int)ray.x && (int)prev_y != (int)ray.y)
 		color = prev_color;
-	else if ((int)ray.prev_x > (int)ray.x)
-		color = 0xff0000;
-	else if ((int)ray.prev_y > (int)ray.y)
-		color = 0x003f00;
-	else if ((int)ray.prev_x < (int)ray.x)
-		color = 0x00ffff;
-	else if ((int)ray.prev_y < (int)ray.y)
-		color = 0x0000ff;
+	if ((int)prev_x > (int)ray.x)
+		color = 0;
+	else if ((int)prev_y > (int)ray.y)
+		color = 1;
+	else if ((int)prev_x < (int)ray.x)
+		color = 2;
+	else if ((int)prev_y < (int)ray.y)
+		color = 3;
 	prev_color = color;
-	SDL_SetRenderDrawColor(window->SDLrenderer,
-		R_VAL(color), G_VAL(color), B_VAL(color), 255);
-	if (len > RES_Y)
-		len = RES_Y;
-	y = RES_Y / 2 - len / 2;
+	imgx = fmod(color == 0 || color == 2 ? ray.y : ray.x, 1) * window->textures[color]->w;
+	screen_y = RES_Y / 2 - (len > RES_Y ? RES_Y : len) / 2;
 	limit = RES_Y / 2 + len / 2;
-	while (y < limit)
-		SDL_RenderDrawPoint(window->SDLrenderer, x, y++);
-}
-
-void		ft_wolf(t_player player, t_window *window)
-{
-	t_ray	ray;
-	int		window_x;
-
-	window_x = -1;
-	ray.angle = player.angle - player.fov / 2;
-	ray.increment = player.fov / (double)RES_X;
-	while (++window_x < RES_X)
+	imgy = 0;
+	while (screen_y < (limit < RES_Y ? limit : RES_Y))
 	{
-		ray.sin = sin(RAD(ray.angle)) / RAY_PREC;
-		ray.cos = cos(RAD(ray.angle)) / RAY_PREC;
-		ray.x = player.pos_x + ray.cos;
-		ray.y = player.pos_y + ray.sin;
-		ray.wall_code = 0;
-		while (!(ray.wall_code = window->map[(int)(ray.y)][(int)(ray.x)]))
-		{
-			ray.prev_x = ray.x;
-			ray.prev_y = ray.y;
-			ray.x += ray.cos;
-			ray.y += ray.sin;
-		}
-		ray.dist = sqrt(pow(player.pos_x - ray.x, 2) +
-			pow(player.pos_y - ray.y, 2)) * cos(RAD(ray.angle - player.angle));
-		ft_draw_line(window_x, (int)(RES_Y / ray.dist), window, ray);
-		ray.angle += ray.increment;
+		imgy = ((double)screen_y - (RES_Y / 2 - len / 2)) /
+				((double)limit - (RES_Y / 2 - len / 2));
+		SDL_GetRGB(ft_get_pixel(window->textures[color], imgx,
+			imgy * window->textures[color]->h),
+			window->textures[color]->format, &col.r, &col.g, &col.b);
+		SDL_SetRenderDrawColor(window->SDLrenderer, col.r, col.g, col.b, 255);
+		SDL_RenderDrawPoint(window->SDLrenderer, screen_x, screen_y++);
 	}
 }
 
@@ -116,9 +100,7 @@ static void	ft_init(t_window *window, int argc, char **argv)
 	window->player.pos_x = 1.5;
 	window->player.pos_y = 1.5;
 	window->player.angle = 0;
-	window->player.fov = 45.0;
-	window->player.move_speed = 0.1;
-	window->player.rot_speed = 2;
+	window->player.fov = 91.0;
 	if (1 > (fd = open(argc == 2 ? argv[1] : NULL, O_RDONLY)))
 		ft_error("give one valid map file name as argument\n");
 	while (0 < (err = get_next_line(fd, &argv[0])) && ++i)
@@ -134,27 +116,27 @@ int			main(int argc, char **argv)
 {
 	SDL_Event	event;
 	t_window	*window;
-	int			quit;
 
-	if (SDL_Init(SDL_INIT_EVERYTHING))
+	if (SDL_Init(SDL_INIT_EVERYTHING) || !IMG_Init(IMG_INIT_PNG))
 		ft_error("could not initialize SDL\n");
-	if (!(window = (t_window *)malloc(sizeof(t_window))))
+	if (!(window = (t_window *)malloc(sizeof(t_window))) ||
+		!(window->textures = (SDL_Surface **)malloc(sizeof(SDL_Surface *) * 4)))
 		ft_error("memory allocation failed\n");
+	if (!(window->textures[0] = IMG_Load(TEXTURE_1)) ||
+		!(window->textures[1] = IMG_Load(TEXTURE_2)) ||
+		!(window->textures[2] = IMG_Load(TEXTURE_3)) ||
+		!(window->textures[3] = IMG_Load(TEXTURE_4)))
+		ft_error("could not find texture\n");
 	ft_init(window, argc, argv);
-	quit = 0;
-	while (!quit)
+	while (1)
 	{
 		while (SDL_PollEvent(&event))
 			if (event.type == SDL_QUIT || event.key.keysym.scancode == ESC)
-				quit = 1;
-			else if (event.key.repeat == 0)
-			{
-				if (event.type == SDL_KEYDOWN)
-					ft_buttons(event.key.keysym.scancode, 1);
-				else if (event.type == SDL_KEYUP)
-					ft_buttons(event.key.keysym.scancode, 0);
-			}
+				return (0);
+			else if (event.key.repeat == 0 && event.type == SDL_KEYDOWN)
+				ft_buttons(event.key.keysym.scancode, 1);
+			else if (event.key.repeat == 0 && event.type == SDL_KEYUP)
+				ft_buttons(event.key.keysym.scancode, 0);
 		ft_loop(window);
 	}
-	return (0);
 }

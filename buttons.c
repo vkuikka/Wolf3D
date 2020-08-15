@@ -6,17 +6,37 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 13:36:13 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/12 14:31:08 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/15 18:17:37 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf.h"
 
-void	ft_error(char *message)
+void		ft_wolf(t_player player, t_window *window)
 {
-	ft_putstr("error: ");
-	ft_putstr(message);
-	exit(1);
+	t_ray	ray;
+	int		window_x;
+
+	window_x = -1;
+	ray.angle = player.angle - player.fov / 2;
+	ray.increment = player.fov / (double)RES_X;
+	while (++window_x < RES_X)
+	{
+		ray.sin = sin(RAD(ray.angle)) / RAY_PREC;
+		ray.cos = cos(RAD(ray.angle)) / RAY_PREC;
+		ray.x = player.pos_x + ray.cos;
+		ray.y = player.pos_y + ray.sin;
+		ray.wall_code = 0;
+		while (!(ray.wall_code = window->map[(int)(ray.y)][(int)(ray.x)]))
+		{
+			ray.x += ray.cos;
+			ray.y += ray.sin;
+		}
+		ray.dist = sqrt(pow(player.pos_x - ray.x, 2) +
+			pow(player.pos_y - ray.y, 2)) * cos(RAD(ray.angle - player.angle));
+		ft_draw_line(window_x, (int)(RES_Y / ray.dist), window, ray);
+		ray.angle += ray.increment;
+	}
 }
 
 void	ft_move(int key, int dir, t_window *window, t_player *player)
@@ -27,18 +47,19 @@ void	ft_move(int key, int dir, t_window *window, t_player *player)
 	if (key == A_KEY || key == D_KEY)
 	{
 		new_x = player->pos_x + cos(RAD(player->angle + (90 * dir)))
-				* (player->move_speed / 2);
+				* (MOVE_SPEED / 2);
 		new_y = player->pos_y + sin(RAD(player->angle + (90 * dir)))
-				* (player->move_speed / 2);
+				* (MOVE_SPEED / 2);
 	}
 	else
 	{
 		new_x = player->pos_x + ((double)dir * cos(RAD(player->angle)))
-				* player->move_speed;
+				* MOVE_SPEED;
 		new_y = player->pos_y + ((double)dir * sin(RAD(player->angle)))
-				* player->move_speed;
+				* MOVE_SPEED;
 	}
-	if (!window->map[(int)new_y][(int)new_x])
+	if (!window->map[(int)(new_y - 0.1)][(int)(new_x - 0.1)] &&
+		!window->map[(int)(new_y + 0.1)][(int)(new_x + 0.1)])
 	{
 		player->pos_x = new_x;
 		player->pos_y = new_y;
@@ -52,7 +73,7 @@ void	ft_deal_key(int key, t_window *window, t_player *player)
 	dir = key == A_KEY || key == S_KEY || key == Q_KEY ? -1 : 1;
 	if (key == Q_KEY || key == E_KEY)
 	{
-		player->angle += dir * player->rot_speed;
+		player->angle += dir * ROT_SPEED;
 		if (player->angle < 0)
 			player->angle += 360;
 		else if (player->angle > 360)
