@@ -1,7 +1,7 @@
 # Wolf3D
 Wolfenstein 3D rendering technique recreated.
 
-## installation
+## Installation
 - Check that you have `SDL2` and `SDL2_image` installed.
 - Clone and open this repository.
 - Run `make`. this should first compile libft library and then comile the project itself. If this fails you should check where SDL was isntalled.
