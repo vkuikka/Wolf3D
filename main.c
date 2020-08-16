@@ -6,13 +6,11 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/12 18:27:31y vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/16 15:04:09 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf.h"
-
-#include <stdio.h>
 
 static void	ft_read_map(int fd, t_window *window)
 {
@@ -43,28 +41,40 @@ static void	ft_read_map(int fd, t_window *window)
 	err < 0 || close(fd) ? ft_error("failed to read given file\n") : free(line);
 }
 
+int			ft_choose_color(t_ray ray)
+{
+	static int		prev_color = 0;
+	int				color;
+
+	color = 0;
+	if ((int)ray.prev_x != (int)ray.x && (int)ray.prev_y != (int)ray.y)
+		color = prev_color;
+	else if ((int)ray.prev_x > (int)ray.x)
+		color = 0;
+	else if ((int)ray.prev_y > (int)ray.y)
+		color = 1;
+	else if ((int)ray.prev_x < (int)ray.x)
+		color = 2;
+	else if ((int)ray.prev_y < (int)ray.y)
+		color = 3;
+	prev_color = color;
+	return (color);
+}
+
 void		ft_draw_line(int screen_x, int len, t_window *window, t_ray ray)
 {
 	SDL_Color	col;
-	static int	prev_color = 0;
 	int			limit;
-	int			screen_y = 0;
-	double		imgx = 0;
-	double		imgy = 0;
+	int			screen_y;
+	double		imgx;
+	double		imgy;
 
-	col.a = 0;
-	if ((int)ray.prev_x != (int)ray.x && (int)ray.prev_y != (int)ray.y)
-		col.a = prev_color;
-	else if ((int)ray.prev_x > (int)ray.x)
-		col.a = 0;
-	else if ((int)ray.prev_y > (int)ray.y)
-		col.a = 1;
-	else if ((int)ray.prev_x < (int)ray.x)
-		col.a = 2;
-	else if ((int)ray.prev_y < (int)ray.y)
-		col.a = 3;
-	prev_color = col.a;
-	imgx = fmod(col.a == 0 || col.a == 2 ? ray.y : ray.x, 1) * window->textures[col.a]->w;
+	imgx = 0;
+	imgy = 0;
+	screen_y = 0;
+	col.a = ft_choose_color(ray);
+	imgx = fmod(col.a == 0 || col.a == 2 ? ray.y : ray.x, 1) *
+				window->textures[col.a]->w;
 	imgy = 0;
 	limit = RES_Y / 2 + len / 2;
 	screen_y = RES_Y / 2 - (len > RES_Y ? RES_Y : len) / 2;
