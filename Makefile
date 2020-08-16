@@ -6,7 +6,7 @@
 #    By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/08 13:46:11 by vkuikka           #+#    #+#              #
-#    Updated: 2020/08/16 15:08:26 by vkuikka          ###   ########.fr        #
+#    Updated: 2020/08/16 15:11:44 by vkuikka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,8 +20,8 @@ LIBS = -lSDL2 -lSDL2_image -L SDL2/SDL2/lib -L SDL2/SDL2_image/lib
 all: $(NAME)
 
 $(NAME):
-	gcc -Wall -Wextra -Werror $(INCLUDES) -o $(NAME) $(FILES) $(LIB) $(LIBS)
 	@make -C libft
+	gcc -Wall -Wextra -Werror $(INCLUDES) -o $(NAME) $(FILES) $(LIB) $(LIBS)
 
 clean:
 	@make clean -C libft
