@@ -6,7 +6,7 @@
 #    By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/08 13:46:11 by vkuikka           #+#    #+#              #
-#    Updated: 2020/08/15 21:07:17 by vkuikka          ###   ########.fr        #
+#    Updated: 2020/08/16 15:08:26 by vkuikka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,17 +20,15 @@ LIBS = -lSDL2 -lSDL2_image -L SDL2/SDL2/lib -L SDL2/SDL2_image/lib
 all: $(NAME)
 
 $(NAME):
-	gcc -Wall -Wextra -Werror $(INCLUDES) -o $(NAME) $(FILES) $(LIB) libft/libft.a $(LIBS)
-	#gcc $(INCLUDES) -o $(NAME) $(FILES) $(LIB) libft/libft.a $(LIBS)
-	#gcc -Wall -Wextra -Werror -framework SDL2 -F ./ -framework SDL2_image -F ./ $(FILES) $(LIB) -I $(INCLUDE) -o $(NAME) -rpath @executable_path
-	#@make -C libft
+	gcc -Wall -Wextra -Werror $(INCLUDES) -o $(NAME) $(FILES) $(LIB) $(LIBS)
+	@make -C libft
 
 clean:
-	#@make clean -C libft
+	@make clean -C libft
 
 fclean: clean
 	rm -f $(NAME)
-	#@make fclean -C libft
+	@make fclean -C libft
 
 re: fclean
 	make all
