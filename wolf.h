@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/08/15 21:07:29 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/08/16 20:07:17 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@
 # include <math.h>
 # include <fcntl.h>
 # include "get_next_line.h"
-# include "SDL.h"
-# include "SDL_image.h"
+# include "SDL2/SDL.h"
+# include "SDL2_image/SDL_image.h"
 
 typedef struct		s_player
 {
