@@ -4,7 +4,7 @@ Wolfenstein 3D rendering technique recreated.
 ## Installation
 - Clone and open this repository.
 - Run `make`. this should first compile libft library and then compile the project itself.
-- If your operating system is other than osx you have to get the correct frameworks for SDL2 and SDL2_image and replace the current ones with those.
+- If your operating system is not osx you have to get the correct frameworks for SDL2 and SDL2_image and replace the current ones with those.
 
 ## Usage
 - Before running the program you should make a map in another file.
