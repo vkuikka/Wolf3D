@@ -25,7 +25,7 @@ Wolfenstein 3D rendering technique recreated.
 ## Controls
 - Moving:
 	- w, a, s and d
-	- up and down arraows
+	- up and down arrows
 - Turning:
 	- q and e
 	- left and right arrows
